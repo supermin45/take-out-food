@@ -9,29 +9,22 @@ module.exports = function bestCharge(inputs) {
         	
         	let foodInfo = [];
         	foodInfo = get_food_info(inputs, allItems);
-
         	
-        	foodInfo = get_subtotal(foodInfo);
-        	
+        	foodInfo = get_subtotal(foodInfo);     	
         	
         	let total = 0;
         	total = get_total(foodInfo);
-
        
         	foodInfo = get_half_price(foodInfo, promotions);
-
         	
         	let reduce = 0;
         	reduce = get_save_money(foodInfo,total);
-
        
         	let type = ' ';
         	type = get_promotion_information(promotions, reduce, foodInfo);
-
         	
         	let charge = 0;
         	charge = get_final_charge(total, reduce);
-
 
         	let result = '';
         	result = print_result_information(foodInfo, charge, reduce, type);
