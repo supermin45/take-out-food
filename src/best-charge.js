@@ -23,7 +23,7 @@ module.exports = function bestCharge(inputs) {
             let arr = [];
 
         	for (let i = 0; i < inputs.length; i++) {
-        		foodInfo[i] = {id: ' ', name: ' ', price: 0, count: 0, save: 0, subtotal: 0};
+        		foodInfo[i] = {id: ' ', name: ' ', price: 0, count: 0, half: 0, subtotal: 0};
         		arr = inputs[i].split(' x ');
                 foodInfo[i].id = arr[0];
                 foodInfo[i].count = arr[1];
@@ -64,8 +64,8 @@ module.exports = function bestCharge(inputs) {
 
         	for (let i = 0; i < foodInfo.length; i++) {
         		for (let j = 0; j < pro.length; j++) {
-        			if (foodInfo[i].id == pro[j]) {
-        				foodInfo[i].save = foodInfo[i].price / 2;
+        			if (foodInfo[i].id === pro[j]) {
+        				foodInfo[i].half = foodInfo[i].price / 2;
         			}
         		} 
         	}
@@ -75,17 +75,17 @@ module.exports = function bestCharge(inputs) {
 
         function getSaveMoney(foodInfo,total) {
         	let reduce = 0;
-        	let reduce_1 = 0;
-        	let reduce_2 = 0;
+        	let reduceOne = 0;
+        	let reduceTwo = 0;
         	if (total >= 30) {
-        		reduce_1 = 6;
+        		reduceOne = 6;
         	}
 
             for (let item of foodInfo) {
-            	reduce_2 += item.save;
+            	reduceTwo += item.half;
             }
 
-            reduce = Math.max(reduce_1, reduce_2);
+            reduce = Math.max(reduceOne, reduceTwo);
             return reduce;
         }
 
@@ -99,7 +99,7 @@ module.exports = function bestCharge(inputs) {
                 
                 let arr = [];
         		for (let item of foodInfo) {
-            	    if (item.save > 0) {
+            	    if (item.half > 0) {
             		    arr.push(item.name);
             	    }
                 }
