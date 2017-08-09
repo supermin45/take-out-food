@@ -4,35 +4,21 @@ const loadPromotions = require('./promotions.js');
 module.exports = function bestCharge(inputs) {
         	let allItems = [];
         	let promotions = [];
-        	allItems = loadAllItems();   	
+        	allItems = loadAllItems();
         	promotions = loadPromotions();
-        	
-        	let foodInfo = [];
-        	foodInfo = get_food_info(inputs, allItems);
-        	
-        	foodInfo = get_subtotal(foodInfo);     	
-        	
-        	let total = 0;
-        	total = get_total(foodInfo);
-       
-        	foodInfo = get_half_price(foodInfo, promotions);
-        	
-        	let reduce = 0;
-        	reduce = get_save_money(foodInfo,total);
-       
-        	let type = ' ';
-        	type = get_promotion_information(promotions, reduce, foodInfo);
-        	
-        	let charge = 0;
-        	charge = get_final_charge(total, reduce);
-
-        	let result = '';
-        	result = print_result_information(foodInfo, charge, reduce, type);
+        	let foodInfo = getFoodinfo(inputs, allItems);
+        	foodInfo = getSubtotal(foodInfo);
+        	let total = getTotal(foodInfo);
+        	foodInfo = getHalfPrice(foodInfo, promotions);
+        	let reduce = getSaveMoney(foodInfo,total);
+        	let type = getPromotionInformation(promotions, reduce, foodInfo);
+        	let charge = getFinalCharge(total, reduce);
+        	let result = printResultInformation(foodInfo, charge, reduce, type);
 
         	return result;
         };
        
-        function get_food_info(inputs, allItems) {
+        function getFoodinfo(inputs, allItems) {
         	let foodInfo = [];
             let arr = [];
 
@@ -54,43 +40,40 @@ module.exports = function bestCharge(inputs) {
 
         	return foodInfo;
         }
-       
-        function get_subtotal(foodInfo) {
+
+        function getSubtotal(foodInfo) {
         	for (let i = 0; i < foodInfo.length; i++) {
-        		let sub = foodInfo[i].price * foodInfo[i].count;
-        		foodInfo[i].subtotal = sub;
+        		foodInfo[i].subtotal = foodInfo[i].price * foodInfo[i].count;
         	}
 
         	return foodInfo;
         }
-        
-        function get_total(foodInfo) {
+
+        function getTotal(foodInfo) {
         	let total = 0;
 
         	for (let i = 0; i < foodInfo.length; i++) {
-        		let a = foodInfo[i].price * foodInfo[i].count;
-        		total += a;
+        		total += foodInfo[i].price * foodInfo[i].count;
         	}
 
         	return total;
         }
-        
-        function get_half_price(foodInfo, promotions) {
-        	let pro = [];
-        	pro = promotions[1].items;
+
+        function getHalfPrice(foodInfo, promotions) {
+        	let pro = promotions[1].items;
+
         	for (let i = 0; i < foodInfo.length; i++) {
         		for (let j = 0; j < pro.length; j++) {
         			if (foodInfo[i].id == pro[j]) {
-        				let p = foodInfo[i].price / 2;
-        				foodInfo[i].save = p;
+        				foodInfo[i].save = foodInfo[i].price / 2;
         			}
         		} 
         	}
 
         	return foodInfo;
         }
-        
-        function get_save_money(foodInfo,total) {
+
+        function getSaveMoney(foodInfo,total) {
         	let reduce = 0;
         	let reduce_1 = 0;
         	let reduce_2 = 0;
@@ -105,8 +88,8 @@ module.exports = function bestCharge(inputs) {
             reduce = Math.max(reduce_1, reduce_2);
             return reduce;
         }
-        
-        function get_promotion_information(promotions, reduce, foodInfo) {
+
+        function getPromotionInformation(promotions, reduce, foodInfo) {
         	let type  = ' ';
             
         	if (reduce === 6) {
@@ -135,21 +118,19 @@ module.exports = function bestCharge(inputs) {
 
         	return type;
         }
-        
-        function get_final_charge(total, reduce) {
-        	let charge = 0;
-        	charge = total - reduce;
+   
+        function getFinalCharge(total, reduce) {
+        	let charge = total - reduce;
 
         	return charge;
         }
-        
-        function print_result_information(foodInfo, charge, reduce, type) {
+ 
+        function printResultInformation(foodInfo, charge, reduce, type) {
         	let result = '============= 订餐明细 =============\n';
 
         	for (let item of foodInfo) {
         		result += item.name + ' ' + 'x' + ' ' + item.count + ' ' + '=' + ' ' + item.subtotal + '元\n';
         	}
-
         	result += '-----------------------------------\n';
         	if (reduce > 0) {
         		result += '使用优惠:\n' + 
